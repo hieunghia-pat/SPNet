@@ -10,6 +10,7 @@ class SPDataset(Dataset):
     def __init__(self, csv_path, nscores=1):
         super(SPDataset, self).__init__()
         
+        self.data = None
         self.load_csv(csv_path)
 
         self.xset = self.data[self.family_features + self.school_features + self.personal_features].values
