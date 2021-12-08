@@ -92,8 +92,10 @@ def main():
         print(f"Stage {stage+1} completed.")
         print("="*23)
 
-        for fold_idx in range(len(folds)):
-            folds[fold_idx] = folds[fold_idx-1]
+        # swapping folds
+        tmp = folds[-1]
+        folds[1:] = folds[:-1]
+        folds[0] = tmp
 
 if __name__ == "__main__":
     models = [SPNet_1, SPNet_2, SPNet_3, SPNet_4, SPNet_5]
