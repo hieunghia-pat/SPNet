@@ -39,7 +39,7 @@ class SPDataset(Dataset):
         for subdataset in subdatasets:
             folds.append(DataLoader(
                 subdataset,
-                batch_size=len(subdataset),
+                batch_size=len(subdataset) - len(subdataset) % k,
                 shuffle=True,
                 collate_fn=collate_fn
             ))
