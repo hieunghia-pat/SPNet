@@ -1,7 +1,9 @@
+from sklearn.utils import shuffle
 import torch
 from torch.utils.data import Dataset, random_split, DataLoader
 from sklearn.preprocessing import LabelEncoder
 import pandas as pd
+import numpy as np
 
 from data_utils.utils import collate_fn
 
@@ -39,10 +41,12 @@ class SPDataset(Dataset):
         for subdataset in subdatasets:
             folds.append(DataLoader(
                 subdataset,
-                batch_size=len(subdataset) - len(subdataset) % k,
+                batch_size=len(subdataset),
                 shuffle=True,
                 collate_fn=collate_fn
             ))
+
+        shuffle(folds)
 
         return folds
 
