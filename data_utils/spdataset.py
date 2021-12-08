@@ -3,7 +3,6 @@ import torch
 from torch.utils.data import Dataset, random_split, DataLoader
 from sklearn.preprocessing import LabelEncoder
 import pandas as pd
-import numpy as np
 
 from data_utils.utils import collate_fn
 
@@ -19,18 +18,25 @@ class SPDataset(Dataset):
         else:
             self.scoreset = self.data[self.school_reports]
         
-    def load_csv(self, path):
-        data = pd.read_csv(path, sep=";")
-        for feature in data.columns:
-            if data[feature].dtype == "object":
-                data[feature] = LabelEncoder().fit_transform(data[feature])
+    def load_csv(self, paths):
+        if not isinstance(paths, list):
+            paths = [paths]
+
+        for path in paths:
+            data = pd.read_csv(path, sep=";")
+            for feature in data.columns:
+                if data[feature].dtype == "object":
+                    data[feature] = LabelEncoder().fit_transform(data[feature])
+
+            if self.data is None:
+                self.data = data
+            else:
+                self.data = pd.concat([self.data, data], ignore_index=True)
 
         self.family_features = ["address", "Pstatus", "Medu", "Fedu", "Mjob", "Fjob", "guardian", "famsize", "famrel"]
         self.school_features = ["school", "reason", "traveltime", "studytime", "failures", "schoolsup", "famsup", "activities", "paid", "internet", "nursery", "higher", "absences"]
         self.personal_features = ["sex", "age", "romantic", "freetime", "goout", "Walc", "Dalc", "health"]
         self.school_reports = ["G1", "G2", "G3"]
-
-        self.data = data
 
     def get_folds(self, k=10):
         fold_size = len(self) // k

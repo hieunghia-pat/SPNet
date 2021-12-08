@@ -147,6 +147,8 @@ class SPNet_5(nn.Module):
     def forward(self, x):
         x = self.dropout_1(F.relu(self.fc_1(x)))
         x = self.dropout_2(F.relu(self.fc_2(x)))
+        x = self.dropout_3(F.relu(self.fc_3(x)))
+        x = self.dropout_4(F.relu(self.fc_4(x)))
 
         scores = self.dropout(self.summarize(x))
 
